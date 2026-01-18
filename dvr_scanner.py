@@ -33,7 +33,7 @@ class FingerPrinter:
     ║    /_______  /\___/    |____|_  /  \___  /   |__|___|  /\____ |\___  >__|     ║
     ║            \/                 \/       \/            \/      \/    \/         ║
     ║                         DVR Scanner & Fingerprinter                           ║
-    ║                         v1.3 - sintax@exploit.im                              ║
+    ║                         v1.5 - dev@sinners.cty                             ║
     ╚═══════════════════════════════════════════════════════════════════════════════╝    
 """
         print(banner)
