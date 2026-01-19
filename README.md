@@ -1,6 +1,6 @@
 # DVR Scanner & Fingerprinter
 
-![Banner](https://img.shields.io/badge/DVR-Scanner-blue)
+![Banner](https://img.shields.io/badge/DVR-Finder-blue)
 ![Python](https://img.shields.io/badge/Python-3.7%2B-green)
 ![License](https://img.shields.io/badge/License-MIT-orange)
 ![Threading](https://img.shields.io/badge/Multi--Threaded-Yes-brightgreen)
@@ -55,8 +55,8 @@ pip install requests urllib3
 
 Or clone and install:
 ```bash
-git clone https://github.com/Syn2Much/dvr-scanner.git
-cd dvr-scanner
+git clone https://github.com/Syn2Much/dvr-finder.git
+cd dvr-finder
 pip install -r requirements.txt
 ```
 
