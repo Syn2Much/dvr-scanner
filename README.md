@@ -7,17 +7,113 @@
 
 A high-performance, multi-threaded DVR/NVR device scanner that fingerprints surveillance systems from a list of IP addresses. Detects and identifies various DVR brands with real-time filtering and auto-saving capabilities.
 
-## ✨ Features
+<img width="1703" height="1171" alt="Screenshot 2026-01-18 101903" src="https://github.com/user-attachments/assets/a6519164-2311-4629-96b1-0848f6e0debb" />
 
-- **🚀 High Performance**: Multi-threaded scanning with configurable thread count
-- **🎯 Smart Detection**: Identifies 12+ DVR brands using signature matching
-- **🛡️ Graceful Shutdown**: Ctrl+C saves results and exits cleanly
-- **💾 Auto-Save**: Saves results incrementally as DVRs are discovered
-- **🌐 Encoding Support**: Handles various character encodings (UTF-8, GB2312, GBK, etc.)
-- **📊 Detailed Output**: JSON results with full fingerprints and plain IP lists
-- **🔍 Verbose Mode**: Optional detailed logging for debugging
-- **📈 Progress Tracking**: Real-time statistics and progress display
 
+## 🔧 How It Works
+
+### Scanning Process
+1. **IP Loading**: Reads IP addresses from input file
+2. **Parallel Scanning**: Uses thread pool to scan multiple IPs simultaneously
+3. **HTTP Requests**: Sends HTTP GET requests to port 80
+4. **Mid-Scan Filtering**: Immediately checks if response indicates a DVR
+5. **Signature Matching**: Compares response against known DVR patterns
+6. **Incremental Saving**: Saves results as DVRs are discovered
+7. **Statistics**: Tracks progress and provides real-time updates
+
+### Detection Methods
+1. **Pattern Matching**: Regex patterns for specific DVR brands
+2. **Keyword Analysis**: Searches for DVR-related terms
+3. **Header Inspection**: Examines Server and WWW-Authenticate headers
+4. **Chinese Language Support**: Detects Chinese security keywords
+5. **Content Analysis**: Page titles and meta information
+
+## ⚡ Performance Tips
+
+- **Thread Count**: Start with 10-20 threads, increase based on network capacity
+- **Save Interval**: Lower values provide more frequent saves but more disk I/O
+- **Verbose Mode**: Use only when debugging as it increases output
+- **Input File Size**: The scanner handles large files efficiently
+
+## 🛡️ Safety Features
+
+- **Graceful Shutdown**: Ctrl+C saves all results before exiting
+- **Timeout Handling**: Prevents hanging on unresponsive hosts
+- **Error Recovery**: Continues scanning even if individual IPs fail
+- **Encoding Fallbacks**: Multiple encoding attempts for international devices
+- **Resource Management**: Proper thread pool shutdown
+## 🚀 Installation
+
+### Prerequisites
+- Python 3.7 or higher
+- pip package manager
+
+### Install Dependencies
+```bash
+pip install requests urllib3
+```
+
+Or clone and install:
+```bash
+git clone https://github.com/Syn2Much/dvr-scanner.git
+cd dvr-scanner
+pip install -r requirements.txt
+```
+
+### Requirements File
+Create `requirements.txt`:
+```txt
+requests>=2.28.0
+urllib3>=1.26.0
+```
+
+## 📖 Usage
+
+### Basic Usage
+```bash
+python dvr_finder.py
+```
+
+### Command Line Arguments
+```bash
+python dvr_finder.py [OPTIONS]
+```
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-i, --input` | Input file with IPs (one per line) | `ips.txt` |
+| `-t, --threads` | Number of threads to use | `10` |
+| `-v, --verbose` | Enable verbose output | `False` |
+| `--save-interval` | Save every N DVRs found | `10` |
+| `-o, --output` | Output JSON filename | `dvr_scan_results.json` |
+| `--version` | Show version | - |
+
+### Examples
+
+**Scan with default settings:**
+```bash
+python dvr_finder.py
+```
+
+**Scan with 20 threads:**
+```bash
+python dvr_finder.py -t 20
+```
+
+**Scan with verbose output and custom input:**
+```bash
+python dvr_finder.py -i my_ips.txt -t 30 -v
+```
+
+**Save results every 5 DVRs found:**
+```bash
+python dvr_finder.py --save-interval 5
+```
+
+**Use custom output filename:**
+```bash
+python dvr_finder.py -o results.json
+```
 ## 📋 Supported DVR Brands
 
 | Brand | Detection Patterns |
@@ -34,79 +130,6 @@ A high-performance, multi-threaded DVR/NVR device scanner that fingerprints surv
 | **Sony** | `sony security`, `snc-*` |
 | **Panasonic** | `panasonic`, `wj-*`, `bl-*` |
 | **Generic DVR/NVR** | `dvr login`, `nvr login`, `cctv`, `监控`, `安防` |
-
-## 🚀 Installation
-
-### Prerequisites
-- Python 3.7 or higher
-- pip package manager
-
-### Install Dependencies
-```bash
-pip install requests urllib3
-```
-
-Or clone and install:
-```bash
-git clone https://github.com/yourusername/dvr-scanner.git
-cd dvr-scanner
-pip install -r requirements.txt
-```
-
-### Requirements File
-Create `requirements.txt`:
-```txt
-requests>=2.28.0
-urllib3>=1.26.0
-```
-
-## 📖 Usage
-
-### Basic Usage
-```bash
-python dvr_scanner.py
-```
-
-### Command Line Arguments
-```bash
-python dvr_scanner.py [OPTIONS]
-```
-
-| Option | Description | Default |
-|--------|-------------|---------|
-| `-i, --input` | Input file with IPs (one per line) | `ips.txt` |
-| `-t, --threads` | Number of threads to use | `10` |
-| `-v, --verbose` | Enable verbose output | `False` |
-| `--save-interval` | Save every N DVRs found | `10` |
-| `-o, --output` | Output JSON filename | `dvr_scan_results.json` |
-| `--version` | Show version | - |
-
-### Examples
-
-**Scan with default settings:**
-```bash
-python dvr_scanner.py
-```
-
-**Scan with 20 threads:**
-```bash
-python dvr_scanner.py -t 20
-```
-
-**Scan with verbose output and custom input:**
-```bash
-python dvr_scanner.py -i my_ips.txt -t 30 -v
-```
-
-**Save results every 5 DVRs found:**
-```bash
-python dvr_scanner.py --save-interval 5
-```
-
-**Use custom output filename:**
-```bash
-python dvr_scanner.py -o results.json
-```
 
 ## 📁 Input Format
 
@@ -155,39 +178,6 @@ Plain text file with one IP address per line:
 10.0.0.50
 ...
 ```
-
-## 🔧 How It Works
-
-### Scanning Process
-1. **IP Loading**: Reads IP addresses from input file
-2. **Parallel Scanning**: Uses thread pool to scan multiple IPs simultaneously
-3. **HTTP Requests**: Sends HTTP GET requests to port 80
-4. **Mid-Scan Filtering**: Immediately checks if response indicates a DVR
-5. **Signature Matching**: Compares response against known DVR patterns
-6. **Incremental Saving**: Saves results as DVRs are discovered
-7. **Statistics**: Tracks progress and provides real-time updates
-
-### Detection Methods
-1. **Pattern Matching**: Regex patterns for specific DVR brands
-2. **Keyword Analysis**: Searches for DVR-related terms
-3. **Header Inspection**: Examines Server and WWW-Authenticate headers
-4. **Chinese Language Support**: Detects Chinese security keywords
-5. **Content Analysis**: Page titles and meta information
-
-## ⚡ Performance Tips
-
-- **Thread Count**: Start with 10-20 threads, increase based on network capacity
-- **Save Interval**: Lower values provide more frequent saves but more disk I/O
-- **Verbose Mode**: Use only when debugging as it increases output
-- **Input File Size**: The scanner handles large files efficiently
-
-## 🛡️ Safety Features
-
-- **Graceful Shutdown**: Ctrl+C saves all results before exiting
-- **Timeout Handling**: Prevents hanging on unresponsive hosts
-- **Error Recovery**: Continues scanning even if individual IPs fail
-- **Encoding Fallbacks**: Multiple encoding attempts for international devices
-- **Resource Management**: Proper thread pool shutdown
 
 ## 📝 Sample Output
 
