@@ -1,119 +1,65 @@
 # DVR Scanner & Fingerprinter
 
+Fast, multi-threaded DVR/NVR scanner that fingerprints common surveillance web interfaces from a list of IPs, with real-time filtering and incremental saving.
+
 ![Banner](https://img.shields.io/badge/DVR-Finder-blue)
 ![Python](https://img.shields.io/badge/Python-3.7%2B-green)
 ![License](https://img.shields.io/badge/License-MIT-orange)
 ![Threading](https://img.shields.io/badge/Multi--Threaded-Yes-brightgreen)
 
-A high-performance, multi-threaded DVR/NVR device scanner that fingerprints surveillance systems from a list of IP addresses. Detects and identifies various DVR brands with real-time filtering and auto-saving capabilities.
+## Features
+- **Multi-threaded scanning** (thread pool)
+- **DVR detection & fingerprinting** (patterns, keywords, headers, titles/meta; includes Chinese keywords)
+- **Auto-save** results while scanning + **Ctrl+C** graceful save/exit
+- **Resilient** timeouts, error handling, encoding fallbacks
 
-<img width="1703" height="1171" alt="Screenshot 2026-01-18 101903" src="https://github.com/user-attachments/assets/a6519164-2311-4629-96b1-0848f6e0debb" />
-
-
-## 🔧 How It Works
-
-### Scanning Process
-1. **IP Loading**: Reads IP addresses from input file
-2. **Parallel Scanning**: Uses thread pool to scan multiple IPs simultaneously
-3. **HTTP Requests**: Sends HTTP GET requests to port 80
-4. **Mid-Scan Filtering**: Immediately checks if response indicates a DVR
-5. **Signature Matching**: Compares response against known DVR patterns
-6. **Incremental Saving**: Saves results as DVRs are discovered
-7. **Statistics**: Tracks progress and provides real-time updates
-
-### Detection Methods
-1. **Pattern Matching**: Regex patterns for specific DVR brands
-2. **Keyword Analysis**: Searches for DVR-related terms
-3. **Header Inspection**: Examines Server and WWW-Authenticate headers
-4. **Chinese Language Support**: Detects Chinese security keywords
-5. **Content Analysis**: Page titles and meta information
-
-## ⚡ Performance Tips
-
-- **Thread Count**: Start with 10-20 threads, increase based on network capacity
-- **Save Interval**: Lower values provide more frequent saves but more disk I/O
-- **Verbose Mode**: Use only when debugging as it increases output
-- **Input File Size**: The scanner handles large files efficiently
-
-## 🛡️ Safety Features
-
-- **Graceful Shutdown**: Ctrl+C saves all results before exiting
-- **Timeout Handling**: Prevents hanging on unresponsive hosts
-- **Error Recovery**: Continues scanning even if individual IPs fail
-- **Encoding Fallbacks**: Multiple encoding attempts for international devices
-- **Resource Management**: Proper thread pool shutdown
-## 🚀 Installation
-
-### Prerequisites
-- Python 3.7 or higher
-- pip package manager
-
-### Install Dependencies
-```bash
-pip install requests urllib3
-```
-
-Or clone and install:
+## Installation
 ```bash
 git clone https://github.com/Syn2Much/dvr-finder.git
 cd dvr-finder
 pip install -r requirements.txt
 ```
 
-### Requirements File
-Create `requirements.txt`:
-```txt
-requests>=2.28.0
-urllib3>=1.26.0
+Or:
+```bash
+pip install requests urllib3
 ```
 
-## 📖 Usage
+**Requirements:** Python 3.7+
 
-### Basic Usage
+## Usage
+```bash
+python dvr_finder.py -i ips.txt -t 10 -o dvr_scan_results.json
+```
+
+Common options:
+- `-i, --input` IP list (default: `ips.txt`)
+- `-t, --threads` threads (default: `10`)
+- `--save-interval` save every N DVRs found (default: `10`)
+- `-o, --output` output JSON (default: `dvr_scan_results.json`)
+- `-v, --verbose` verbose output
+
+Examples:
 ```bash
 python dvr_finder.py
-```
-
-### Command Line Arguments
-```bash
-python dvr_finder.py [OPTIONS]
-```
-
-| Option | Description | Default |
-|--------|-------------|---------|
-| `-i, --input` | Input file with IPs (one per line) | `ips.txt` |
-| `-t, --threads` | Number of threads to use | `10` |
-| `-v, --verbose` | Enable verbose output | `False` |
-| `--save-interval` | Save every N DVRs found | `10` |
-| `-o, --output` | Output JSON filename | `dvr_scan_results.json` |
-| `--version` | Show version | - |
-
-### Examples
-
-**Scan with default settings:**
-```bash
-python dvr_finder.py
-```
-
-**Scan with 20 threads:**
-```bash
 python dvr_finder.py -t 20
-```
-
-**Scan with verbose output and custom input:**
-```bash
 python dvr_finder.py -i my_ips.txt -t 30 -v
-```
-
-**Save results every 5 DVRs found:**
-```bash
 python dvr_finder.py --save-interval 5
-```
-
-**Use custom output filename:**
-```bash
 python dvr_finder.py -o results.json
 ```
+
+## Input / Output
+**Input:** one IP per line.
+```txt
+192.168.1.1
+192.168.1.2
+10.0.0.1
+```
+
+**Outputs:**
+- `dvr_scan_results.json` — full fingerprint details per hit
+- `dvr_ips.txt` — plain list of DVR IPs found
+
 ## 📋 Supported DVR Brands
 
 | Brand | Detection Patterns |
@@ -131,56 +77,8 @@ python dvr_finder.py -o results.json
 | **Panasonic** | `panasonic`, `wj-*`, `bl-*` |
 | **Generic DVR/NVR** | `dvr login`, `nvr login`, `cctv`, `监控`, `安防` |
 
-## 📁 Input Format
 
-Create a file named `ips.txt` (or custom name) with one IP address per line:
-
-```txt
-192.168.1.1
-192.168.1.2
-192.168.1.3
-10.0.0.1
-10.0.0.2
-...
-```
-
-## 📊 Output Files
-
-The scanner creates two output files:
-
-### 1. JSON Results (`dvr_scan_results.json`)
-Contains detailed information for each detected DVR:
-```json
-[
-  {
-    "ip": "192.168.1.100",
-    "status_code": 200,
-    "headers": {...},
-    "important_headers": {...},
-    "page_content": "...",
-    "content_length": 1523,
-    "dvr_type": ["Hikvision", "Generic DVR/NVR"],
-    "detection_method": "Pattern match",
-    "detection_signatures": [...],
-    "scan_timestamp": "2024-01-15T10:30:45.123456",
-    "url": "http://192.168.1.100:80",
-    "server_info": "Apache/2.4.41",
-    "page_title": "Hikvision Web Login"
-  }
-]
-```
-
-### 2. IP List (`dvr_ips.txt`)
-Plain text file with one IP address per line:
-```txt
-192.168.1.100
-192.168.1.101
-10.0.0.50
-...
-```
-
-## 📝 Sample Output
-
+## Example Output
 ```
     ╔═══════════════════════════════════════════════════════════════════════════════╗
     ║    ____________   ______________  ___________.__            . ___              ║
@@ -219,72 +117,8 @@ Starting scan with 10 threads...
 🎯 [25/1000] DVR FOUND: 10.0.0.50 | Status: 401 | Type: Dahua
 ```
 
-## 🤝 Contributing
+## Adding signatures
+Add new patterns to the `dvr_signatures` dictionary inside `detect_dvr_type_with_signatures()`.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Adding New DVR Signatures
-To add support for a new DVR brand, add patterns to the `dvr_signatures` dictionary in the `detect_dvr_type_with_signatures` method.
-
-## ⚠️ Disclaimer
-
-**FOR EDUCATIONAL AND AUTHORIZED TESTING PURPOSES ONLY**
-
-This tool is intended for:
-- Security researchers testing their own networks
-- Network administrators auditing their infrastructure
-- Educational purposes in controlled environments
-
-**YOU MUST HAVE EXPLICIT PERMISSION** to scan any network or device. Unauthorized scanning may be illegal in your jurisdiction.
-
-The authors are not responsible for any misuse or damage caused by this tool.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**"Input file not found" error:**
-- Ensure the input file exists in the same directory
-- Check file permissions
-- Specify full path: `-i /path/to/ips.txt`
-
-**Slow scanning:**
-- Reduce thread count with `-t 5`
-- Check network connectivity
-- Some networks may throttle multiple connections
-
-**No DVRs detected:**
-- Verify IPs are reachable on port 80
-- Check if devices require different ports
-- Try increasing timeout in code (currently 5 seconds)
-
-**Encoding errors:**
-- The scanner automatically tries multiple encodings
-- Check if input file uses unusual encoding
-
-## 📞 Support
-
-For issues, feature requests, or questions:
-1. Check the troubleshooting section above
-2. Open an issue on GitHub
-3. Ensure you include:
-   - Python version
-   - Command used
-   - Error messages
-   - Sample input (if possible)
-
----
-
-**Happy Scanning!** 🎯
-
-*Remember: Always scan responsibly and with proper authorization.*
+## Disclaimer
+**Educational and authorized testing only.** You must have explicit permission to scan networks/devices. The authors are not responsible for misuse or damage.
