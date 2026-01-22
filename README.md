@@ -7,6 +7,36 @@ Fast, multi-threaded scanner that fingerprints surveillance web interfaces (DVR/
 ![Python](https://img.shields.io/badge/Python-3.7%2B-green)
 ![License](https://img.shields.io/badge/License-MIT-orange)
 
+
+```
+    ╔═══════════════════════════════════════════════════════════════════════════════╗
+    ║    ____________   ______________  ___________.__            . ___              ║
+    ║    \______ \   \ /   /\______   \ \_   _____/|__| ____    __| _/___________   ║
+    ║    |    |  \   Y   /  |       _/  |    __)  |  |/    \  / __ |/ __ \_  __ \   ║
+    ║    |    `   \     /   |    |   \  |     \   |  |   |  \/ /_/ \  ___/|  | \/   ║
+    ║    /_______  /\___/    |____|_  /  \___  /   |__|___|  /\____ |\___  >__|     ║
+    ║            \/                 \/       \/            \/      \/    \/         ║
+    ║                         DVR Scanner & Fingerprinter                           ║
+    ║                         v2.0 - dev@sinners.cty                                ║
+    ╚═══════════════════════════════════════════════════════════════════════════════╝    
+
+                     🔍 Scanning for DVR Devices
+
+                     💡 Press Ctrl+C to save and exit gracefully
+
+════════════════════════════════════════════════════════════════════════
+Starting DVR Scanner on ips.txt with 10 threads...
+════════════════════════════════════════════════════════════════════════
+
+✓ [1/1000] 192.168.1.1 - Status: 200 (not DVR)
+✗ [2/1000] 192.168.1.2 - Connection refused
+🎯 [3/1000] DVR FOUND: 192.168.1.100 | Status: 200 | Type: Hikvision
+🎯 [4/1000] DVR FOUND: 10.0.0.55 | Status: 200 | Type: Generic Login (Context: Login page with 'stream')
+...
+💾 Auto-saved 10 DVR results
+...
+```
+
 ## Features
 - 🚀 **Concurrent scanning** using `ThreadPoolExecutor` with configurable thread count.
 - 🛡️ **Graceful shutdown** on SIGINT/SIGTERM (Ctrl+C): saves progress, stops workers cleanly.
@@ -69,34 +99,6 @@ Flags:
   - `ip`, `status_code`, `important_headers`, `page_title`, `page_content` (truncated), `dvr_type`, `detection_method`, `detection_signatures`, `scan_timestamp`, `url`, optional `server_info`
 - **TXT** (default: `dvr_scan_results_ips.txt`): list of detected DVR IPs
 
-```
-    ╔═══════════════════════════════════════════════════════════════════════════════╗
-    ║    ____________   ______________  ___________.__            . ___              ║
-    ║    \______ \   \ /   /\______   \ \_   _____/|__| ____    __| _/___________   ║
-    ║    |    |  \   Y   /  |       _/  |    __)  |  |/    \  / __ |/ __ \_  __ \   ║
-    ║    |    `   \     /   |    |   \  |     \   |  |   |  \/ /_/ \  ___/|  | \/   ║
-    ║    /_______  /\___/    |____|_  /  \___  /   |__|___|  /\____ |\___  >__|     ║
-    ║            \/                 \/       \/            \/      \/    \/         ║
-    ║                         DVR Scanner & Fingerprinter                           ║
-    ║                         v2.0 - dev@sinners.cty                                ║
-    ╚═══════════════════════════════════════════════════════════════════════════════╝    
-
-                     🔍 Scanning for DVR Devices
-
-                     💡 Press Ctrl+C to save and exit gracefully
-
-════════════════════════════════════════════════════════════════════════
-Starting DVR Scanner on ips.txt with 10 threads...
-════════════════════════════════════════════════════════════════════════
-
-✓ [1/1000] 192.168.1.1 - Status: 200 (not DVR)
-✗ [2/1000] 192.168.1.2 - Connection refused
-🎯 [3/1000] DVR FOUND: 192.168.1.100 | Status: 200 | Type: Hikvision
-🎯 [4/1000] DVR FOUND: 10.0.0.55 | Status: 200 | Type: Generic Login (Context: Login page with 'stream')
-...
-💾 Auto-saved 10 DVR results
-...
-```
 
 
 ### Detection logic (strict)
