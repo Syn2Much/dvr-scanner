@@ -47,12 +47,11 @@ Starting DVR Scanner on ips.txt with 10 threads...
 - 🚫 **Noise reduction**: skips processing 400/404 responses; tracks HTTP error count.
 - 📊 **Scan summary**: totals for scanned, skipped errors, failures, DVRs found.
 - ⚙️ **Configurable** input file, threads, verbosity flag, save interval, output paths.
-- 🔒 **SSL warnings suppressed** for cleaner output (HTTP-only scanning on port 80).
 
 ## Getting Started
 
 ### Prerequisites
-- Python 3.8+
+- Python 3
 - `requests`, `urllib3`
 
 ### Installation
@@ -100,14 +99,10 @@ Flags:
 - **TXT** (default: `dvr_scan_results_ips.txt`): list of detected DVR IPs
 
 
-
 ### Detection logic (strict)
 - Brand patterns for major DVR/NVR/IoT vendors (headers + body).
 - Title-based fallback only for explicit DVR/NVR/camera phrases (e.g., “network video recorder”, “embedded net dvr”).
 - Generic password/login heuristics are intentionally removed to reduce false positives.
-
-### Graceful shutdown
-- SIGINT/SIGTERM triggers immediate safe-save of current detections and cancels pending futures.
 
 ### Operational tips
 - Start with a modest thread count to avoid overloading networks.
@@ -129,3 +124,11 @@ ips.txt           # input IP list (one per line)
 dvr_scan_results.json      # JSON detections (output)
 dvr_scan_results_ips.txt   # IPs only (output)
 ```
+
+## 👤 Author
+
+**@Syn2Much**
+
+---
+
+⭐ Star this repo if you find it useful!
