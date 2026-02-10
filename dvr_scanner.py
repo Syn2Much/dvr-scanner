@@ -32,15 +32,12 @@ class FingerPrinter:
                 r"hikvision",
                 r"hik\-?vision",
                 r"doc/page/login\.asp",
-                r"ivms",
-                r"webcomponent",
+                r"\bivms[-_]?\d{4}\b",
             ],
             "Dahua": [
                 r"dahua",
                 r"dahuasecurity",
-                r"login\.cgi",
                 r"guilogin\.cgi",
-                r"web\.cgi",
                 r"dss-web",
             ],
             "Uniview": [r"uniview", r"uniarch", r"/LAPI/V1\.0", r"program/login"],
@@ -48,13 +45,13 @@ class FingerPrinter:
             "Samsung/Hanwha": [r"hanwha", r"wisenet", r"samsung techwin"],
             "Avigilon": [r"avigilon"],
             "Mobotix": [r"mobotix"],
-            "XMEye": [r"xmeye", r"cloud\.net"],
-            "TVT": [r"tvt", r"nvms"],
+            "XMEye": [r"xmeye"],
+            "TVT": [r"\btvt\s*(digital|dvr|nvr|td-)", r"\bnvms[-_]?\d"],
             "Amcrest": [r"amcrest"],
             'DrayTek Vigor': [r'draytek', r'vigor', r'vilet'],
             "Foscam": [r"foscam"],
             "Reolink": [r"reolink"],
-            "Synology": [r"synology", r"diskstation", r"surveillance station"],
+            "Synology": [r"surveillance station"],
         }
         for brand, patterns in raw.items():
             combined = "|".join(f"(?:{p})" for p in patterns)
