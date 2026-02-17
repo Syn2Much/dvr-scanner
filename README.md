@@ -6,6 +6,7 @@ Fast, multi-threaded scanner that fingerprints DVR/NVR web interfaces and securi
 ![License](https://img.shields.io/badge/License-MIT-orange)
 
 ---
+<img width="891" height="619" alt="image" src="https://github.com/user-attachments/assets/7668b20b-d8cc-4aaf-82a1-1e223ecea7f5" />
 
 ## How It Works
 
