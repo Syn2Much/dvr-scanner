@@ -94,5 +94,5 @@ Only scan hosts and networks you are authorized to test. Unauthorized scanning m
 
 **Syn2Much**
 
-- Email: [dev@sinnners.city](mailto:dev@sinnners.city)
+- Email: [hell@sinnners.city](mailto:hell@sinnners.city)
 - X: [@synacket](https://x.com/synacket)
